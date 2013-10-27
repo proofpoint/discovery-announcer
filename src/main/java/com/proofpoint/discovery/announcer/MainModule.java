@@ -18,6 +18,8 @@ package com.proofpoint.discovery.announcer;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 
+import static com.proofpoint.configuration.ConfigurationModule.bindConfig;
+
 public class MainModule
         implements Module
 {
@@ -26,5 +28,7 @@ public class MainModule
     {
         binder.requireExplicitBindings();
         binder.disableCircularProxies();
+
+        bindConfig(binder).to(AnnouncerConfig.class);
     }
 }
