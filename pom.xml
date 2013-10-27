@@ -9,7 +9,6 @@
         <groupId>com.proofpoint.platform</groupId>
         <artifactId>rest-server-base</artifactId>
         <version>0.83</version>
-        
     </parent>
 
     <properties>
@@ -17,8 +16,6 @@
     </properties>
 
     <version>1.0-SNAPSHOT</version>
-
-    
 
     <dependencies>
         <dependency>

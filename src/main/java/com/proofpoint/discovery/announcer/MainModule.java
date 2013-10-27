@@ -17,16 +17,14 @@ package com.proofpoint.discovery.announcer;
 
 import com.google.inject.Binder;
 import com.google.inject.Module;
-import com.proofpoint.discovery.client.DiscoveryBinder;
 
 public class MainModule
         implements Module
 {
+    @Override
     public void configure(Binder binder)
     {
         binder.requireExplicitBindings();
         binder.disableCircularProxies();
-
-        DiscoveryBinder.discoveryBinder(binder).bindHttpAnnouncement("skeleton");
     }
 }

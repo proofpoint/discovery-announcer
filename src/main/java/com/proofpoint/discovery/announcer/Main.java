@@ -42,7 +42,7 @@ public class Main
     public static void main(String[] args)
             throws Exception
     {
-        Bootstrap app = bootstrapApplication("skeleton")
+        Bootstrap app = bootstrapApplication("discovery-announcer")
                 .withModules(
                         new NodeModule(),
                         new DiscoveryModule(),
