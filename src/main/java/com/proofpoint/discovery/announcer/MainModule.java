@@ -17,8 +17,10 @@ package com.proofpoint.discovery.announcer;
 
 import com.google.inject.Binder;
 import com.google.inject.Module;
+import com.google.inject.Scopes;
 
 import static com.proofpoint.configuration.ConfigurationModule.bindConfig;
+import static com.proofpoint.http.client.HttpClientBinder.httpClientBinder;
 
 public class MainModule
         implements Module
@@ -30,5 +32,7 @@ public class MainModule
         binder.disableCircularProxies();
 
         bindConfig(binder).to(AnnouncerConfig.class);
+        httpClientBinder(binder).bindHttpClient("health-check", HealthCheck.class);
+        binder.bind(HealthCheckerManager.class).in(Scopes.SINGLETON);
     }
 }
