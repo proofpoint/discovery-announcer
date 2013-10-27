@@ -15,6 +15,7 @@
  */
 package com.proofpoint.discovery.announcer;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.inject.Injector;
 import com.proofpoint.bootstrap.Bootstrap;
 import com.proofpoint.discovery.client.announce.Announcer;
@@ -58,7 +59,10 @@ public class Main
                         new ReportingClientModule(),
                         new TraceTokenModule(),
                         new MainModule()
-                );
+                )
+                .withApplicationDefaults(ImmutableMap.of(
+                        "http-server.http.enabled", "false"
+                ));
 
         try {
             Injector injector = app.initialize();
