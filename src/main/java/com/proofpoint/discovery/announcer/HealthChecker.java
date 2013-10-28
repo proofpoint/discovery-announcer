@@ -7,6 +7,7 @@ import com.proofpoint.discovery.client.announce.ServiceAnnouncement;
 import com.proofpoint.discovery.client.announce.ServiceAnnouncement.ServiceAnnouncementBuilder;
 import com.proofpoint.http.client.HttpClient;
 import com.proofpoint.http.client.StatusResponseHandler.StatusResponse;
+import com.proofpoint.log.Logger;
 import com.proofpoint.node.NodeInfo;
 
 import javax.annotation.Nullable;
@@ -25,6 +26,7 @@ import static com.proofpoint.http.client.StatusResponseHandler.createStatusRespo
 public class HealthChecker
     implements Runnable
 {
+    private static final Logger log = Logger.get(HealthChecker.class);
     private static final int NUM_FAILURES_TO_DROP_ANNOUNCEMENT = 2;
 
     private final String serviceType;
@@ -59,7 +61,6 @@ public class HealthChecker
         try {
             StatusResponse response = httpClient.execute(prepareGet().setUri(checkUri).build(), createStatusResponseHandler());
             failed = response.getStatusCode() >= 300;
-
         }
         catch (RuntimeException ignored) {
             failed = true;
@@ -67,6 +68,7 @@ public class HealthChecker
 
         if (failed && failureCount.incrementAndGet() == NUM_FAILURES_TO_DROP_ANNOUNCEMENT) {
             announcer.removeServiceAnnouncement(announcementUuid.getAndSet(null));
+            log.warn("Revoking announcement of %s", serviceType);
         }
         else if (!failed && announcementUuid.get() == null) {
             failureCount.set(0);
@@ -98,6 +100,7 @@ public class HealthChecker
             ServiceAnnouncement announcement = announcementBuilder.build();
             announcer.addServiceAnnouncement(announcement);
             announcementUuid.set(announcement.getId());
+            log.info("Announcing %s", serviceType);
         }
     }
 }
