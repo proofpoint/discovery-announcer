@@ -3,6 +3,7 @@ package com.proofpoint.discovery.announcer;
 import com.google.common.collect.ImmutableMap;
 import org.testng.annotations.Test;
 
+import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import static com.proofpoint.configuration.testing.ConfigAssertions.assertFullMa
 import static com.proofpoint.configuration.testing.ConfigAssertions.assertLegacyEquivalence;
 import static com.proofpoint.configuration.testing.ConfigAssertions.assertRecordedDefaults;
 import static com.proofpoint.configuration.testing.ConfigAssertions.recordDefaults;
+import static com.proofpoint.testing.ValidationAssertions.assertFailsValidation;
 
 public class TestAnnouncerConfig
 {
@@ -45,5 +47,12 @@ public class TestAnnouncerConfig
                 .build();
 
         assertLegacyEquivalence(AnnouncerConfig.class, currentProperties);
+    }
+
+    @Test
+    public void testMissingServices()
+    {
+        assertFailsValidation(new AnnouncerConfig(), "services", "may not be null", NotNull.class);
+
     }
 }
