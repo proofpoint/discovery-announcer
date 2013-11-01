@@ -60,7 +60,7 @@
         <main-class>com.proofpoint.discovery.announcer.Main</main-class>
     </properties>
 
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
 
 
     <build>
