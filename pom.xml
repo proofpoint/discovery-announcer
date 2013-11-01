@@ -60,7 +60,7 @@
         <main-class>com.proofpoint.discovery.announcer.Main</main-class>
     </properties>
 
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
 
     <build>
@@ -313,7 +313,7 @@
                                  <mapping>
                                      <directory>/opt/proofpoint/${project.artifactId}/lib</directory>
                                      <directoryIncluded>true</directoryIncluded>
-                                     <dependency/>
+                                     <dependency />
                                      <!-- Manually include the JAR containing the application code -->
                                      <sources>
                                          <source>
