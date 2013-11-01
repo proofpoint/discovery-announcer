@@ -1,8 +1,10 @@
 package com.proofpoint.discovery.announcer;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.inject.Injector;
 import com.proofpoint.bootstrap.Bootstrap;
 import com.proofpoint.bootstrap.LifeCycleManager;
+import com.proofpoint.discovery.client.testing.TestingDiscoveryModule;
 import com.proofpoint.http.client.ApacheHttpClient;
 import com.proofpoint.http.client.HttpClient;
 import com.proofpoint.http.client.StatusResponseHandler.StatusResponse;
@@ -13,9 +15,11 @@ import com.proofpoint.jmx.JmxHttpModule;
 import com.proofpoint.jmx.JmxModule;
 import com.proofpoint.json.JsonModule;
 import com.proofpoint.node.testing.TestingNodeModule;
+import com.proofpoint.reporting.ReportingModule;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.weakref.jmx.guice.MBeanModule;
 
 import java.net.URI;
 
@@ -39,12 +43,18 @@ public class TestServer
                 .withModules(
                         new TestingNodeModule(),
                         new TestingHttpServerModule(),
+                        new TestingDiscoveryModule(),
+                        new ReportingModule(),
                         new JsonModule(),
                         new JaxrsModule(),
                         new JmxHttpModule(),
                         new JmxModule(),
+                        new MBeanModule(),
                         new MainModule()
-                );
+                )
+                .setRequiredConfigurationProperties(ImmutableMap.of(
+                        "service.test.check.uri", "http://localhost:1234"
+                ));
 
         Injector injector = app
                 .doNotInitializeLogging()
