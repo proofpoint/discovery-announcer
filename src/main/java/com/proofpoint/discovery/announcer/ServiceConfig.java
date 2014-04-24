@@ -49,7 +49,6 @@ public class ServiceConfig
     }
 
     @Config("property")
-    @ConfigMap
     public ServiceConfig setProperties(Map<String, String> properties)
     {
         this.properties = properties;

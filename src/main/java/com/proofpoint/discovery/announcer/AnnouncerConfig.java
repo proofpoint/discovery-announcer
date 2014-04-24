@@ -17,7 +17,6 @@ public class AnnouncerConfig
     }
 
     @Config("service")
-    @ConfigMap(ServiceConfig.class)
     public AnnouncerConfig setServices(Map<String, ServiceConfig> services)
     {
         this.services = services;

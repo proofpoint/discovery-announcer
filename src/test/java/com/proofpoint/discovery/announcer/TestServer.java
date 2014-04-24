@@ -5,9 +5,9 @@ import com.google.inject.Injector;
 import com.proofpoint.bootstrap.Bootstrap;
 import com.proofpoint.bootstrap.LifeCycleManager;
 import com.proofpoint.discovery.client.testing.TestingDiscoveryModule;
-import com.proofpoint.http.client.ApacheHttpClient;
 import com.proofpoint.http.client.HttpClient;
 import com.proofpoint.http.client.StatusResponseHandler.StatusResponse;
+import com.proofpoint.http.client.jetty.JettyHttpClient;
 import com.proofpoint.http.server.testing.TestingHttpServer;
 import com.proofpoint.http.server.testing.TestingHttpServerModule;
 import com.proofpoint.jaxrs.JaxrsModule;
@@ -53,6 +53,7 @@ public class TestServer
                         new MBeanModule(),
                         new MainModule()
                 )
+                .quiet()
                 .setRequiredConfigurationProperties(ImmutableMap.of(
                         "service.test.check.uri", "http://localhost:1234"
                 ));
@@ -62,7 +63,7 @@ public class TestServer
 
         lifeCycleManager = injector.getInstance(LifeCycleManager.class);
         server = injector.getInstance(TestingHttpServer.class);
-        client = new ApacheHttpClient();
+        client = new JettyHttpClient();
     }
 
     @AfterMethod
