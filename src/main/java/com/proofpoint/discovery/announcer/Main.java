@@ -43,28 +43,27 @@ public class Main
     public static void main(String[] args)
             throws Exception
     {
-        Bootstrap app = bootstrapApplication("discovery-announcer")
-                .withModules(
-                        new NodeModule(),
-                        new DiscoveryModule(),
-                        new HttpServerModule(),
-                        new JsonModule(),
-                        new JaxrsModule(),
-                        new MBeanModule(),
-                        new JmxModule(),
-                        new JmxHttpModule(),
-                        new LogJmxModule(),
-                        new HttpEventModule(),
-                        new ReportingModule(),
-                        new ReportingClientModule(),
-                        new TraceTokenModule(),
-                        new MainModule()
-                )
-                .withApplicationDefaults(ImmutableMap.of(
-                        "http-server.http.enabled", "false"
-                ));
-
         try {
+            Bootstrap app = bootstrapApplication("discovery-announcer")
+                    .withModules(
+                            new NodeModule(),
+                            new DiscoveryModule(),
+                            new HttpServerModule(),
+                            new JsonModule(),
+                            new JaxrsModule(),
+                            new MBeanModule(),
+                            new JmxModule(),
+                            new JmxHttpModule(),
+                            new LogJmxModule(),
+                            new HttpEventModule(),
+                            new ReportingModule(),
+                            new ReportingClientModule(),
+                            new TraceTokenModule(),
+                            new MainModule()
+                    )
+                    .withApplicationDefaults(ImmutableMap.of(
+                            "http-server.http.enabled", "false"
+                    ));
             Injector injector = app.initialize();
             injector.getInstance(Announcer.class).start();
         }
