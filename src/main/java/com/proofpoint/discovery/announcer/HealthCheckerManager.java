@@ -1,6 +1,5 @@
 package com.proofpoint.discovery.announcer;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
 import com.proofpoint.discovery.client.announce.Announcer;
 import com.proofpoint.http.client.HttpClient;
@@ -12,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static com.proofpoint.concurrent.Threads.threadsNamed;
 import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 
 public class HealthCheckerManager
@@ -30,7 +30,7 @@ public class HealthCheckerManager
         this.httpClient = httpClient;
         this.announcer = announcer;
         this.nodeInfo = nodeInfo;
-        executorService = newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setNameFormat("health-checker-%s").setDaemon(true).build());
+        executorService = newSingleThreadScheduledExecutor(threadsNamed("health-checker"));
     }
 
     @PostConstruct

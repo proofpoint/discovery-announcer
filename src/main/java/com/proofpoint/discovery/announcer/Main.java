@@ -15,14 +15,11 @@
  */
 package com.proofpoint.discovery.announcer;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.inject.Injector;
 import com.proofpoint.bootstrap.Bootstrap;
 import com.proofpoint.discovery.client.DiscoveryModule;
 import com.proofpoint.discovery.client.announce.Announcer;
 import com.proofpoint.event.client.HttpEventModule;
-import com.proofpoint.http.server.HttpServerModule;
-import com.proofpoint.jmx.JmxHttpModule;
 import com.proofpoint.jmx.JmxModule;
 import com.proofpoint.json.JsonModule;
 import com.proofpoint.log.LogJmxModule;
@@ -33,7 +30,6 @@ import com.proofpoint.reporting.ReportingModule;
 import org.weakref.jmx.guice.MBeanModule;
 
 import static com.proofpoint.bootstrap.Bootstrap.bootstrapApplication;
-import static com.proofpoint.jaxrs.JaxrsModule.explicitJaxrsModule;
 
 public class Main
 {
@@ -47,21 +43,15 @@ public class Main
                     .withModules(
                             new NodeModule(),
                             new DiscoveryModule(),
-                            new HttpServerModule(),
                             new JsonModule(),
-                            explicitJaxrsModule(),
                             new MBeanModule(),
                             new JmxModule(),
-                            new JmxHttpModule(),
                             new LogJmxModule(),
                             new HttpEventModule(),
                             new ReportingModule(),
                             new ReportingClientModule(),
                             new MainModule()
-                    )
-                    .withApplicationDefaults(ImmutableMap.of(
-                            "http-server.http.enabled", "false"
-                    ));
+                    );
             Injector injector = app.initialize();
             injector.getInstance(Announcer.class).start();
         }

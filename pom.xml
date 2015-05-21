@@ -121,11 +121,6 @@
 
         <dependency>
             <groupId>com.proofpoint.platform</groupId>
-            <artifactId>http-server</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.proofpoint.platform</groupId>
             <artifactId>jaxrs</artifactId>
         </dependency>
 
@@ -152,11 +147,6 @@
         <dependency>
             <groupId>org.weakref</groupId>
             <artifactId>jmxutils</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
         </dependency>
 
         <dependency>
