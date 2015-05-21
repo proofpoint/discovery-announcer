@@ -35,6 +35,7 @@ import com.proofpoint.tracetoken.TraceTokenModule;
 import org.weakref.jmx.guice.MBeanModule;
 
 import static com.proofpoint.bootstrap.Bootstrap.bootstrapApplication;
+import static com.proofpoint.jaxrs.JaxrsModule.explicitJaxrsModule;
 
 public class Main
 {
@@ -50,7 +51,7 @@ public class Main
                             new DiscoveryModule(),
                             new HttpServerModule(),
                             new JsonModule(),
-                            new JaxrsModule(),
+                            explicitJaxrsModule(),
                             new MBeanModule(),
                             new JmxModule(),
                             new JmxHttpModule(),
