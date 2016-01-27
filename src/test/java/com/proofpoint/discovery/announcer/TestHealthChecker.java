@@ -1,6 +1,5 @@
 package com.proofpoint.discovery.announcer;
 
-import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.net.InetAddresses;
 import com.proofpoint.discovery.client.announce.Announcer;
@@ -10,7 +9,6 @@ import com.proofpoint.http.client.Request;
 import com.proofpoint.http.client.Response;
 import com.proofpoint.http.client.testing.TestingHttpClient;
 import com.proofpoint.http.client.testing.TestingHttpClient.Processor;
-import com.proofpoint.http.client.testing.TestingResponse;
 import com.proofpoint.node.NodeInfo;
 import org.mockito.ArgumentCaptor;
 import org.testng.annotations.BeforeMethod;
@@ -20,6 +18,7 @@ import java.net.URI;
 import java.util.Map;
 import java.util.UUID;
 
+import static com.proofpoint.http.client.testing.TestingResponse.mockResponse;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -44,7 +43,7 @@ public class TestHealthChecker
             if (checkException) {
                 throw new Exception();
             }
-            return new TestingResponse(checkStatus, ImmutableListMultimap.<String, String>of(), new byte[0]);
+            return mockResponse(checkStatus);
         }
     });
 
