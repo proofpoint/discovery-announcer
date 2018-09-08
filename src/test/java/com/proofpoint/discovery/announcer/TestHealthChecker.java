@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static com.proofpoint.http.client.testing.TestingResponse.mockResponse;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -141,10 +141,12 @@ public class TestHealthChecker
     @Test
     public void testRevokeAnnouncement()
     {
+        ArgumentCaptor<ServiceAnnouncement> announcementCaptor = ArgumentCaptor.forClass(ServiceAnnouncement.class);
+
         HealthChecker checker = new HealthChecker("testService", URI.create("http://localhost:1234/v1/check"), null, testingHttpClient, announcer, nodeInfo);
 
         checker.run();
-        verify(announcer).addServiceAnnouncement(any(ServiceAnnouncement.class));
+        verify(announcer).addServiceAnnouncement(announcementCaptor.capture());
         verifyNoMoreInteractions(announcer);
 
         checkStatus = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -154,8 +156,7 @@ public class TestHealthChecker
 
         checkException = true;
         checker.run();
-        ArgumentCaptor<ServiceAnnouncement> announcementCaptor = ArgumentCaptor.forClass(ServiceAnnouncement.class);
-        verify(announcer).addServiceAnnouncement(announcementCaptor.capture());
+        verify(announcer).addServiceAnnouncement(any(ServiceAnnouncement.class));
         verify(announcer).removeServiceAnnouncement(announcementCaptor.getValue().getId());
         verifyNoMoreInteractions(announcer);
     }
