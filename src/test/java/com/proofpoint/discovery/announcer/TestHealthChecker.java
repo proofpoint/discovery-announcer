@@ -1,6 +1,5 @@
 package com.proofpoint.discovery.announcer;
 
-import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.net.InetAddresses;
 import com.proofpoint.discovery.client.announce.Announcer;
@@ -10,7 +9,6 @@ import com.proofpoint.http.client.Request;
 import com.proofpoint.http.client.Response;
 import com.proofpoint.http.client.testing.TestingHttpClient;
 import com.proofpoint.http.client.testing.TestingHttpClient.Processor;
-import com.proofpoint.http.client.testing.TestingResponse;
 import com.proofpoint.node.NodeInfo;
 import org.mockito.ArgumentCaptor;
 import org.testng.annotations.BeforeMethod;
@@ -20,7 +18,8 @@ import java.net.URI;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.mockito.Matchers.any;
+import static com.proofpoint.http.client.testing.TestingResponse.mockResponse;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -44,7 +43,7 @@ public class TestHealthChecker
             if (checkException) {
                 throw new Exception();
             }
-            return new TestingResponse(checkStatus, ImmutableListMultimap.<String, String>of(), new byte[0]);
+            return mockResponse(checkStatus);
         }
     });
 
@@ -53,6 +52,8 @@ public class TestHealthChecker
     {
         announcer = mock(Announcer.class);
         nodeInfo = new NodeInfo("test-application",
+                "",
+                "",
                 "test_environment",
                 "test_pool",
                 null,
@@ -60,7 +61,7 @@ public class TestHealthChecker
                 "testhost.example.com",
                 null,
                 "external.example.com",
-                null, null, null);
+                null);
         checkStatus = HttpStatus.NO_CONTENT;
         checkException = false;
     }
@@ -142,10 +143,12 @@ public class TestHealthChecker
     @Test
     public void testRevokeAnnouncement()
     {
+        ArgumentCaptor<ServiceAnnouncement> announcementCaptor = ArgumentCaptor.forClass(ServiceAnnouncement.class);
+
         HealthChecker checker = new HealthChecker("testService", URI.create("http://localhost:1234/v1/check"), null, testingHttpClient, announcer, nodeInfo);
 
         checker.run();
-        verify(announcer).addServiceAnnouncement(any(ServiceAnnouncement.class));
+        verify(announcer).addServiceAnnouncement(announcementCaptor.capture());
         verifyNoMoreInteractions(announcer);
 
         checkStatus = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -155,8 +158,7 @@ public class TestHealthChecker
 
         checkException = true;
         checker.run();
-        ArgumentCaptor<ServiceAnnouncement> announcementCaptor = ArgumentCaptor.forClass(ServiceAnnouncement.class);
-        verify(announcer).addServiceAnnouncement(announcementCaptor.capture());
+        verify(announcer).addServiceAnnouncement(any(ServiceAnnouncement.class));
         verify(announcer).removeServiceAnnouncement(announcementCaptor.getValue().getId());
         verifyNoMoreInteractions(announcer);
     }

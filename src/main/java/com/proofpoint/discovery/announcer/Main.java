@@ -15,15 +15,11 @@
  */
 package com.proofpoint.discovery.announcer;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.inject.Injector;
 import com.proofpoint.bootstrap.Bootstrap;
-import com.proofpoint.discovery.client.announce.Announcer;
 import com.proofpoint.discovery.client.DiscoveryModule;
+import com.proofpoint.discovery.client.announce.Announcer;
 import com.proofpoint.event.client.HttpEventModule;
-import com.proofpoint.jmx.JmxHttpModule;
-import com.proofpoint.http.server.HttpServerModule;
-import com.proofpoint.jaxrs.JaxrsModule;
 import com.proofpoint.jmx.JmxModule;
 import com.proofpoint.json.JsonModule;
 import com.proofpoint.log.LogJmxModule;
@@ -31,7 +27,6 @@ import com.proofpoint.log.Logger;
 import com.proofpoint.node.NodeModule;
 import com.proofpoint.reporting.ReportingClientModule;
 import com.proofpoint.reporting.ReportingModule;
-import com.proofpoint.tracetoken.TraceTokenModule;
 import org.weakref.jmx.guice.MBeanModule;
 
 import static com.proofpoint.bootstrap.Bootstrap.bootstrapApplication;
@@ -43,28 +38,20 @@ public class Main
     public static void main(String[] args)
             throws Exception
     {
-        Bootstrap app = bootstrapApplication("discovery-announcer")
-                .withModules(
-                        new NodeModule(),
-                        new DiscoveryModule(),
-                        new HttpServerModule(),
-                        new JsonModule(),
-                        new JaxrsModule(),
-                        new MBeanModule(),
-                        new JmxModule(),
-                        new JmxHttpModule(),
-                        new LogJmxModule(),
-                        new HttpEventModule(),
-                        new ReportingModule(),
-                        new ReportingClientModule(),
-                        new TraceTokenModule(),
-                        new MainModule()
-                )
-                .withApplicationDefaults(ImmutableMap.of(
-                        "http-server.http.enabled", "false"
-                ));
-
         try {
+            Bootstrap app = bootstrapApplication("discovery-announcer")
+                    .withModules(
+                            new NodeModule(),
+                            new DiscoveryModule(),
+                            new JsonModule(),
+                            new MBeanModule(),
+                            new JmxModule(),
+                            new LogJmxModule(),
+                            new HttpEventModule(),
+                            new ReportingModule(),
+                            new ReportingClientModule(),
+                            new MainModule()
+                    );
             Injector injector = app.initialize();
             injector.getInstance(Announcer.class).start();
         }
