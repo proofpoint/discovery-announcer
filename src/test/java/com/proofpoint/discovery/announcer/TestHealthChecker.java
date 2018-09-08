@@ -52,6 +52,8 @@ public class TestHealthChecker
     {
         announcer = mock(Announcer.class);
         nodeInfo = new NodeInfo("test-application",
+                "",
+                "",
                 "test_environment",
                 "test_pool",
                 null,
